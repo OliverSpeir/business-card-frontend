@@ -5,7 +5,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Business Card Generator',
-  description: 'This example project is designed to demonstrate a GraphQL API',
+  description: 'This example project is designed to demonstrate FastAPI GraphQL with Supabase',
 }
 
 export default function RootLayout({
