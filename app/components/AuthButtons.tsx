@@ -1,11 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.NEXT_PUBLIC_SUPABASE_KEY || ""
-);
+import {supabase} from './supabaseClient';
 
 const AuthButtons: React.FC = () => {
   const [signedIn, setSignedIn] = useState<boolean>(false);
@@ -13,14 +8,14 @@ const AuthButtons: React.FC = () => {
   useEffect(() => {
     const checkSession = async () => {
       const { data, error } = await supabase.auth.getSession();
-      console.log(data);
+      // console.log(data);
       setSignedIn(data !== null);
     };
     checkSession();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        console.log(session);
+        // console.log(session);
         setSignedIn(session !== null);
       }
     );

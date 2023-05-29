@@ -1,56 +1,31 @@
 "use client"
-import React, { useState } from "react";
+import React, { SyntheticEvent } from 'react';
+import { useResource, CardRequest } from "./useResource";
 
 const Form = () => {
-  const [name, setName] = useState("");
-  const [jobTitle, setJobTitle] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [linkedin, setLinkedin] = useState("");
+  const { createResource } = useResource();
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
 
-    const url = "http://127.0.0.1:8000/graphql";
-    const body = {
-      query: `
-        mutation {
-          create_business_card(
-            email: "${email}", 
-            job_title: "${jobTitle}", 
-            full_name: "${name}", 
-            phone_number: "${phoneNumber}", 
-            linkedin: "${linkedin}", 
-            style: "style", 
-            theme: "theme"
-          ) {
-            email
-            job_title
-            full_name
-            phone_number
-            linkedin
-            style
-            theme
-          }
-        }
-      `,
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const cardInfo: CardRequest = {
+      email: (formData.get("email") as string) || "",
+      job_title: (formData.get("job_title") as string) || "",
+      full_name: (formData.get("full_name") as string) || "",
+      phone_number: (formData.get("phone_number") as string) || "",
+      linkedin: (formData.get("linkedin") as string) || "",
+      style: "style",
+      theme: "theme",
     };
+    // console.log(cardInfo);
+    await createResource(cardInfo);
 
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        console.log("Success!", data);
-      } else {
-        console.log("Error", data);
-      }
+      const card = await createResource(cardInfo);
+      console.log("Success!", card);
     } catch (error) {
       console.log("Error", error);
     }
@@ -64,37 +39,32 @@ const Form = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="text"
+              name="full_name"
               placeholder="Full name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
             />
             <input
               type="text"
+              name="job_title"
               placeholder="Job title"
-              value={jobTitle}
-              onChange={(e) => setJobTitle(e.target.value)}
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
             />
             <input
               type="email"
+              name="email"
               placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
             />
             <input
               type="text"
+              name="phone_number"
               placeholder="Phone number"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
             />
             <input
               type="text"
+              name="linkedin"
               placeholder="LinkedIn"
-              value={linkedin}
-              onChange={(e) => setLinkedin(e.target.value)}
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
             />
             <button
