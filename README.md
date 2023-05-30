@@ -19,3 +19,4 @@
 ### Resources
 
 - [Supabase JS Library](https://supabase.com/docs/reference/javascript/initializing)
+- [Backend Repo](https://github.com/OliverSpeir/business-card-fastapi)
