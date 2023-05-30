@@ -1,6 +1,19 @@
 "use client";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { supabase } from "./supabaseClient";
+
+export interface PublicResource {
+  publicResources: string[] | undefined;
+  loading: boolean;
+}
+
+export interface PrivateResource {
+  resources: Card[] | undefined;
+  createResource: (card: CardRequest) => Promise<string | undefined>;
+  deleteResource: (id: number) => Promise<void>;
+  updateResource: (card: Card) => Promise<void>;
+  loading: boolean;
+}
 
 export type Card = {
   id: number;
@@ -9,10 +22,9 @@ export type Card = {
   full_name: string;
   phone_number: string;
   linkedin: string;
-  style: string;
-  theme: string;
   image_url: string;
   user_id: string;
+  base_card: string;
 };
 
 export type CardRequest = Omit<Card, "id" | "image_url" | "user_id">;
@@ -26,9 +38,8 @@ const GET_CARDS = `
       full_name
       phone_number
       linkedin
-      style
-      theme
       image_url
+      base_card
     }
   }
 `;
@@ -40,8 +51,7 @@ const CREATE_CARD = `
     $full_name: String!,
     $phone_number: String!,
     $linkedin: String!,
-    $style: String!,
-    $theme: String!
+    $base_card: String!,
   ) {
     create_business_card(
       email: $email, 
@@ -49,8 +59,7 @@ const CREATE_CARD = `
       full_name: $full_name, 
       phone_number: $phone_number, 
       linkedin: $linkedin, 
-      style: $style, 
-      theme: $theme
+      base_card: $base_card,
     ) {
       image_url
     }
@@ -58,10 +67,18 @@ const CREATE_CARD = `
 `;
 
 const DELETE_CARD = `
-  mutation delete_business_card($card_id: Int!) {
-    delete_business_card(card_id: $card_id){
-      message
-  }
+  mutation delete_business_card($id: Int!) {
+    delete_business_card(id: $id){
+      ... on DeleteBusinessCardSuccess {
+        message
+      }
+      ... on NotFoundError {
+        message
+      }
+      ... on NotAuthorizedError {
+        message
+      }
+    }
   }
 `;
 
@@ -72,9 +89,8 @@ const UPDATE_CARD = `
     $job_title: String, 
     $full_name: String, 
     $phone_number: String, 
-    $linkedin: String, 
-    $style: String, 
-    $theme: String
+    $linkedin: String,
+    $base_card: String,
   ) {
     update_business_card(
       id: $id, 
@@ -82,32 +98,68 @@ const UPDATE_CARD = `
       job_title: $job_title, 
       full_name: $full_name, 
       phone_number: $phone_number, 
-      linkedin: $linkedin, 
-      style: $style, 
-      theme: $theme
+      linkedin: $linkedin,
+      base_card: $base_card
     ) {
-      id
-      email
-      job_title
-      full_name
-      phone_number
-      linkedin
-      style
-      theme
-      image_url
-      user_id
+      ... on UpdateBusinessCardSuccess {
+        business_card {
+          id
+          email
+          job_title
+          full_name
+          phone_number
+          linkedin
+          image_url
+          user_id
+          base_card
+        }
+      }
+      ... on NotFoundError {
+        message
+      }
+      ... on NotAuthorizedError {
+        message
+      }
     }
   }
 `;
 
-export function useResource() {
-  const apiUrl = process.env.NEXT_PUBLIC_GRAPHQL_API_URL;
-  if (!apiUrl) {
-    throw new Error("NEXT_PUBLIC_GRAPHQL_API_URL is not defined");
+const GET_DEFAULT_CARDS = `
+  query {
+    defaultCardImages
   }
-  const { data, error, mutate } = useSWR("business_cards", fetchResource);
+`;
 
-  async function fetchResource() {
+export function usePublicResource(apiUrl: string) {
+  const fetchResource = async () => {
+    try {
+      const body = {
+        query: GET_DEFAULT_CARDS,
+      };
+      const response = await fetch(apiUrl as RequestInfo, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const responseJSON = await response.json();
+      return responseJSON.data.defaultCardImages as [];
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const { data, error } = useSWR("public_resources", fetchResource);
+  return {
+    publicResources: data as string[] | undefined,
+    loading: !error && !data,
+  };
+}
+
+export function usePrivateResource(apiUrl: string) {
+  const fetchResource = async () => {
     try {
       const session = await supabase.auth.getSession();
       const tokens = session?.data?.session?.access_token;
@@ -129,49 +181,9 @@ export function useResource() {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
-  // async function createResource(info: CardRequest) {
-  //   try {
-  //     const session = await supabase.auth.getSession();
-  //     const tokens = session?.data?.session?.access_token;
-
-  //     const { email, job_title, full_name, phone_number, linkedin, style, theme } = info;
-
-  //     const query = `
-  //       mutation {
-  //         create_business_card(
-  //           email: "${email}",
-  //           job_title: "${job_title}",
-  //           full_name: "${full_name}",
-  //           phone_number: "${phone_number}",
-  //           linkedin: "${linkedin}",
-  //           style: "${style}",
-  //           theme: "${theme}"
-  //         ) {
-  //           image_url
-  //         }
-  //       }
-  //     `;
-
-  //     const response = await fetch(apiUrl as RequestInfo, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${tokens}`,
-  //       },
-  //       body: JSON.stringify({ query }),
-  //     });
-  //     const data = await response.json();
-  //     console.log(data)
-  //     mutate();
-  //     return data?.data?.create_business_card?.image_url;
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }
-
-  async function createResource(card: CardRequest) {
+  const createResource = async (card: CardRequest) => {
     try {
       const session = await supabase.auth.getSession();
       const tokens = session?.data?.session?.access_token;
@@ -196,18 +208,17 @@ export function useResource() {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
-  async function deleteResource(id: number) {
-    console.log(typeof(id))
+  const deleteResource = async (id: number) => {
     try {
       const session = await supabase.auth.getSession();
       const tokens = session?.data?.session?.access_token;
-      console.log("deleting card")
+      console.log("deleting card");
 
       const body = {
         query: DELETE_CARD,
-        variables: { card_id: id },
+        variables: { id: id },
       };
 
       const response = await fetch(apiUrl as RequestInfo, {
@@ -218,15 +229,13 @@ export function useResource() {
         },
         body: JSON.stringify(body),
       });
-      const data = await response.json();
-      console.log(data)
       mutate();
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
-  async function updateResource(card: Card) {
+  const updateResource = async (card: Card) => {
     try {
       const session = await supabase.auth.getSession();
       const tokens = session?.data?.session?.access_token;
@@ -244,15 +253,13 @@ export function useResource() {
         },
         body: JSON.stringify(body),
       });
-
-      const data = await response.json();
       mutate();
-      return data?.data?.update_business_card;
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
-  }
+  };
 
+  const { data, error, mutate } = useSWR("business_cards", fetchResource);
   return {
     resources: data as Card[] | undefined,
     createResource,
