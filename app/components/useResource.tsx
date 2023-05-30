@@ -33,10 +33,70 @@ const GET_CARDS = `
   }
 `;
 
+const CREATE_CARD = `
+  mutation CreateCard(
+    $email: String!,
+    $job_title: String!,
+    $full_name: String!,
+    $phone_number: String!,
+    $linkedin: String!,
+    $style: String!,
+    $theme: String!
+  ) {
+    create_business_card(
+      email: $email, 
+      job_title: $job_title, 
+      full_name: $full_name, 
+      phone_number: $phone_number, 
+      linkedin: $linkedin, 
+      style: $style, 
+      theme: $theme
+    ) {
+      image_url
+    }
+  }
+`;
 
 const DELETE_CARD = `
-  mutation delete_business_card($id: Int!) {
-    delete_business_card(id: $id)
+  mutation delete_business_card($card_id: Int!) {
+    delete_business_card(card_id: $card_id){
+      message
+  }
+  }
+`;
+
+const UPDATE_CARD = `
+  mutation update_business_card(
+    $id: Int!, 
+    $email: String, 
+    $job_title: String, 
+    $full_name: String, 
+    $phone_number: String, 
+    $linkedin: String, 
+    $style: String, 
+    $theme: String
+  ) {
+    update_business_card(
+      id: $id, 
+      email: $email, 
+      job_title: $job_title, 
+      full_name: $full_name, 
+      phone_number: $phone_number, 
+      linkedin: $linkedin, 
+      style: $style, 
+      theme: $theme
+    ) {
+      id
+      email
+      job_title
+      full_name
+      phone_number
+      linkedin
+      style
+      theme
+      image_url
+      user_id
+    }
   }
 `;
 
@@ -71,28 +131,55 @@ export function useResource() {
     }
   }
 
-  async function createResource(info: CardRequest) {
+  // async function createResource(info: CardRequest) {
+  //   try {
+  //     const session = await supabase.auth.getSession();
+  //     const tokens = session?.data?.session?.access_token;
+
+  //     const { email, job_title, full_name, phone_number, linkedin, style, theme } = info;
+
+  //     const query = `
+  //       mutation {
+  //         create_business_card(
+  //           email: "${email}",
+  //           job_title: "${job_title}",
+  //           full_name: "${full_name}",
+  //           phone_number: "${phone_number}",
+  //           linkedin: "${linkedin}",
+  //           style: "${style}",
+  //           theme: "${theme}"
+  //         ) {
+  //           image_url
+  //         }
+  //       }
+  //     `;
+
+  //     const response = await fetch(apiUrl as RequestInfo, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${tokens}`,
+  //       },
+  //       body: JSON.stringify({ query }),
+  //     });
+  //     const data = await response.json();
+  //     console.log(data)
+  //     mutate();
+  //     return data?.data?.create_business_card?.image_url;
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
+
+  async function createResource(card: CardRequest) {
     try {
       const session = await supabase.auth.getSession();
       const tokens = session?.data?.session?.access_token;
 
-      const { email, job_title, full_name, phone_number, linkedin, style, theme } = info;
-
-      const query = `
-        mutation {
-          create_business_card(
-            email: "${email}", 
-            job_title: "${job_title}", 
-            full_name: "${full_name}", 
-            phone_number: "${phone_number}", 
-            linkedin: "${linkedin}", 
-            style: "${style}", 
-            theme: "${theme}"
-          ) {
-            image_url
-          }
-        }
-      `;
+      const body = {
+        query: CREATE_CARD,
+        variables: card,
+      };
 
       const response = await fetch(apiUrl as RequestInfo, {
         method: "POST",
@@ -100,8 +187,9 @@ export function useResource() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${tokens}`,
         },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify(body),
       });
+
       const data = await response.json();
       mutate();
       return data?.data?.create_business_card?.image_url;
@@ -111,16 +199,44 @@ export function useResource() {
   }
 
   async function deleteResource(id: number) {
+    console.log(typeof(id))
+    try {
+      const session = await supabase.auth.getSession();
+      const tokens = session?.data?.session?.access_token;
+      console.log("deleting card")
+
+      const body = {
+        query: DELETE_CARD,
+        variables: { card_id: id },
+      };
+
+      const response = await fetch(apiUrl as RequestInfo, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokens}`,
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await response.json();
+      console.log(data)
+      mutate();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function updateResource(card: Card) {
     try {
       const session = await supabase.auth.getSession();
       const tokens = session?.data?.session?.access_token;
 
       const body = {
-        query: DELETE_CARD,
-        variables: { id },
+        query: UPDATE_CARD,
+        variables: card,
       };
 
-      await fetch(apiUrl as RequestInfo, {
+      const response = await fetch(apiUrl as RequestInfo, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +245,9 @@ export function useResource() {
         body: JSON.stringify(body),
       });
 
+      const data = await response.json();
       mutate();
+      return data?.data?.update_business_card;
     } catch (err) {
       console.error(err);
     }
@@ -139,6 +257,7 @@ export function useResource() {
     resources: data as Card[] | undefined,
     createResource,
     deleteResource,
+    updateResource,
     loading: !error && !data,
   };
 }

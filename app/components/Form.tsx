@@ -1,10 +1,13 @@
-"use client"
-import React, { SyntheticEvent } from 'react';
-import { useResource, CardRequest } from "./useResource";
+"use client";
+import React, {SyntheticEvent} from "react";
+import {CardRequest, Card} from "./useResource";
 
-const Form = () => {
-  const { createResource } = useResource();
+type FormProps = {
+  initialValues?: Card;
+  onSubmit: (info: CardRequest) => void;
+};
 
+const Form: React.FC<FormProps> = ({ initialValues, onSubmit }) => {
   const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
 
@@ -20,15 +23,8 @@ const Form = () => {
       style: "style",
       theme: "theme",
     };
-    // console.log(cardInfo);
-    await createResource(cardInfo);
 
-    try {
-      const card = await createResource(cardInfo);
-      console.log("Success!", card);
-    } catch (error) {
-      console.log("Error", error);
-    }
+    onSubmit(cardInfo);
   };
 
   return (

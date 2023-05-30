@@ -1,18 +1,8 @@
-// import Image from 'next/image'
-import Header from './components/Header'
-import Form from './components/Form'
-import Footer from './components/Footer'
-import AuthButtons from './components/AuthButtons'
+"use client"
+import Form from './components/Form';
+import {useResource} from './components/useResource';
 
-export default function Home() {
-  return (
-    <>
-    <main>
-      <Header/>
-      <AuthButtons/>
-      <Form/>
-      <Footer/>
-    </main>
-    </>
-  )
+export default function MainPage() {
+const {createResource} = useResource()
+  return <Form onSubmit={createResource}/>;
 }
