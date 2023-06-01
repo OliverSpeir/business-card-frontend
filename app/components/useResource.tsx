@@ -21,7 +21,7 @@ export type Card = {
   job_title: string;
   full_name: string;
   phone_number: string;
-  linkedin: string;
+  website: string;
   image_url: string;
   user_id: string;
   base_card: string;
@@ -37,7 +37,7 @@ const GET_CARDS = `
       job_title
       full_name
       phone_number
-      linkedin
+      website
       image_url
       base_card
     }
@@ -50,7 +50,7 @@ const CREATE_CARD = `
     $job_title: String!,
     $full_name: String!,
     $phone_number: String!,
-    $linkedin: String!,
+    $website: String!,
     $base_card: String!,
   ) {
     create_business_card(
@@ -58,7 +58,7 @@ const CREATE_CARD = `
       job_title: $job_title, 
       full_name: $full_name, 
       phone_number: $phone_number, 
-      linkedin: $linkedin, 
+      website: $website, 
       base_card: $base_card,
     ) {
       image_url
@@ -89,7 +89,7 @@ const UPDATE_CARD = `
     $job_title: String, 
     $full_name: String, 
     $phone_number: String, 
-    $linkedin: String,
+    $website: String,
     $base_card: String,
   ) {
     update_business_card(
@@ -98,7 +98,7 @@ const UPDATE_CARD = `
       job_title: $job_title, 
       full_name: $full_name, 
       phone_number: $phone_number, 
-      linkedin: $linkedin,
+      website: $website,
       base_card: $base_card
     ) {
       ... on UpdateBusinessCardSuccess {
@@ -108,7 +108,7 @@ const UPDATE_CARD = `
           job_title
           full_name
           phone_number
-          linkedin
+          website
           image_url
           user_id
           base_card

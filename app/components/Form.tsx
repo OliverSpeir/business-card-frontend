@@ -25,8 +25,8 @@ const Form: React.FC<FormProps> = ({ initialValues, onSubmit, onCancel }) => {
         (formData.get("phone_number") as string) ||
         initialValues?.phone_number ||
         "",
-      linkedin:
-        (formData.get("linkedin") as string) || initialValues?.linkedin || "",
+      website:
+        (formData.get("website") as string) || initialValues?.website || "",
       base_card:
         initialValues?.base_card ||
         "this will be reset during onsubmit props passed from page",
@@ -67,8 +67,8 @@ const Form: React.FC<FormProps> = ({ initialValues, onSubmit, onCancel }) => {
             />
             <input
               type="text"
-              name="linkedin"
-              placeholder="LinkedIn"
+              name="website"
+              placeholder="linkedin.com/in/example/"
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
             />
             <div className="flex justify-between">
