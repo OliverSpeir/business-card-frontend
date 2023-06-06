@@ -12,7 +12,11 @@ type FormProps = {
   formType: "image" | "digital" | "digital-create";
   initialValues?: Card | DigitalCard;
   onSubmit: (values: CardRequest | DigitalCardRequest) => void;
-  onCancel: () => void;
+  onCancel?: () => void;
+  slugValidation?: {
+    unique: boolean;
+    message: string;
+  };
 };
 const isCard = (object: any): object is Card => {
   return "base_card" in object;
@@ -23,6 +27,7 @@ const Form: React.FC<FormProps> = ({
   initialValues,
   onSubmit,
   onCancel,
+  slugValidation,
 }) => {
   const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
@@ -112,12 +117,23 @@ const Form: React.FC<FormProps> = ({
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
             />
             {(formType === "digital" || formType === "digital-create") && (
-              <input
-                type="text"
-                name="slug"
-                placeholder="your-name"
-                className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
-              />
+              <div>
+                <input
+                  type="text"
+                  name="slug"
+                  placeholder="your-name"
+                  className={`block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none ${
+                    slugValidation && !slugValidation.unique
+                      ? "border-red-600"
+                      : ""
+                  }`}
+                />
+                {slugValidation && !slugValidation.unique && (
+                  <div className="text-red-600 text-xs mt-1">
+                    {slugValidation.message}
+                  </div>
+                )}
+              </div>
             )}
             <div className="flex justify-between">
               <button

@@ -13,18 +13,30 @@ export default function DigitalPage() {
   if (!PrivateApiUrl) {
     throw new Error("NEXT_PUBLIC_GRAPHQL_API_URL is not defined");
   }
-
+  const [slugValidation, setSlugValidation] = React.useState<{
+    unique: boolean;
+    message: string;
+  }>({ unique: true, message: "" });
   const { createResource }: DigitalCardResource =
     useDigitalCardResource(PrivateApiUrl);
 
-  const handleCreate = (cardInfo: DigitalCardRequest | CardRequest) => {
+  const handleCreate = async (cardInfo: DigitalCardRequest | CardRequest) => {
     if ("slug" in cardInfo) {
-      createResource(cardInfo as DigitalCardRequest);
+      const result = await createResource(cardInfo as DigitalCardRequest);
+      console.log(result)
+      if (!result) {
+        setSlugValidation({
+          unique: false,
+          message: "Slug needs to be unique.",
+        });
+      }
+      if (result){
+        setSlugValidation({
+          unique: true,
+          message: "",
+        })
+      }
     }
-  };
-
-  const handleCancel = () => {
-    // No operation (no-op)
   };
 
   return (
@@ -37,7 +49,7 @@ export default function DigitalPage() {
           <Form
             formType="digital-create"
             onSubmit={handleCreate}
-            onCancel={handleCancel}
+            slugValidation={slugValidation}
           />
         </div>
       </div>
