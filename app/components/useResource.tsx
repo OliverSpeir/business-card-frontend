@@ -196,7 +196,7 @@ const CREATE_DIGITAL_CARD = `
 const DELETE_DIGITAL_CARD = `
   mutation delete_digital_card($id: Int!) {
     delete_digital_card(id: $id){
-      ... on DeleteDigitalCardSuccess {
+      ... on DeleteSuccess {
         message
       }
       ... on NotFoundError {

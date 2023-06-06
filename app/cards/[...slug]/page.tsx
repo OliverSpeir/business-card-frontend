@@ -68,6 +68,7 @@ function CardPage({ params }: CardPageProps) {
         }
 
         const json = await response.json();
+        console.log(json)
         setData(json.data.digitalCards);
       } catch (error) {
       }

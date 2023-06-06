@@ -29,13 +29,13 @@ export default function DigitalPage() {
 
   return (
     <div className="p-4">
-      <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-10">
+      <div className="bg-opacity-50 flex items-center justify-center z-10">
         <div>
           <h2 className="relative top-32 left-30 text-2xl font-bold mb-2 z-10">
             Create New Digital Card
           </h2>
           <Form
-            formType="digital"
+            formType="digital-create"
             onSubmit={handleCreate}
             onCancel={handleCancel}
           />
