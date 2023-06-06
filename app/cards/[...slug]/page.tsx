@@ -86,13 +86,15 @@ function CardPage({ params }: CardPageProps) {
 
   const { fullName, jobTitle, email, website, phoneNumber } = data;
 
-  const saveToContacts = (name: string, phone: string) => {
+  const saveToContacts = (name: string, phone: string, email: string, website: string) => {
     const vCardData = [
       "BEGIN:VCARD",
       "VERSION:3.0",
       `N:;${name};;;`,
       `FN:${name}`,
       `TEL;TYPE=CELL:${phone}`,
+      `EMAIL:${email}`,
+      `URL:${website}`,
       "END:VCARD",
     ].join("\n");
 
@@ -104,7 +106,7 @@ function CardPage({ params }: CardPageProps) {
     link.download = `${name}.vcf`;
     link.click();
     URL.revokeObjectURL(url);
-  };
+};
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -127,7 +129,7 @@ function CardPage({ params }: CardPageProps) {
             </a>
           </p>
           <button
-            onClick={() => saveToContacts(fullName, phoneNumber)}
+            onClick={() => saveToContacts(fullName, phoneNumber, email, website)}
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
           >
             Save to Contacts
