@@ -15,7 +15,8 @@ const AuthButtons: React.FC = () => {
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        // console.log(session);
+        // console.log(await supabase.auth.getSession())
+        // console.log(await supabase.auth.getUser())
         setSignedIn(session !== null);
       }
     );

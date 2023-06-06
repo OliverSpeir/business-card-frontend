@@ -7,13 +7,22 @@ export interface PublicResource {
   loading: boolean;
 }
 
-export interface PrivateResource {
+export interface ImageResource {
   resources: Card[] | undefined;
   createResource: (card: CardRequest) => Promise<string | undefined>;
   deleteResource: (id: number) => Promise<void>;
   updateResource: (card: Card) => Promise<void>;
   loading: boolean;
 }
+
+export interface DigitalCardResource {
+  resources: DigitalCard[] | undefined;
+  createResource: (card: DigitalCardRequest) => Promise<string | undefined>;
+  deleteResource: (id: number) => Promise<void>;
+  updateResource: (card: DigitalCard) => Promise<void>;
+  loading: boolean;
+}
+
 
 export type Card = {
   id: number;
@@ -27,6 +36,22 @@ export type Card = {
   base_card: string;
 };
 
+export type DigitalCard = {
+  id: number;
+  email: string;
+  job_title: string;
+  full_name: string;
+  phone_number: string;
+  website: string;
+  user_id: string;
+  slug: string;
+  qr_code: string;
+};
+
+export type DigitalCardRequest = Omit<
+  DigitalCard,
+  "user_id" | "qr_code" | "id"
+>;
 export type CardRequest = Omit<Card, "id" | "image_url" | "user_id">;
 
 const GET_CARDS = `
@@ -69,7 +94,7 @@ const CREATE_CARD = `
 const DELETE_CARD = `
   mutation delete_business_card($id: Int!) {
     delete_business_card(id: $id){
-      ... on DeleteBusinessCardSuccess {
+      ... on DeleteSuccess {
         message
       }
       ... on NotFoundError {
@@ -130,6 +155,102 @@ const GET_DEFAULT_CARDS = `
   }
 `;
 
+const GET_DIGITAL_CARDS = `
+  query {
+    digital_cards {
+      id
+      email
+      job_title
+      full_name
+      phone_number
+      website
+      user_id
+      slug
+      qr_code
+    }
+  }
+`;
+
+const CREATE_DIGITAL_CARD = `
+  mutation create_dgital_card(
+    $email: String!,
+    $job_title: String!,
+    $full_name: String!,
+    $phone_number: String!,
+    $website: String!,
+    $slug: String!,
+  ) {
+    create_digital_card(
+      email: $email, 
+      job_title: $job_title, 
+      full_name: $full_name, 
+      phone_number: $phone_number, 
+      website: $website, 
+      slug: $slug
+    ) {
+      qr_code
+    }
+  }
+`;
+
+const DELETE_DIGITAL_CARD = `
+  mutation delete_digital_card($id: Int!) {
+    delete_digital_card(id: $id){
+      ... on DeleteDigitalCardSuccess {
+        message
+      }
+      ... on NotFoundError {
+        message
+      }
+      ... on NotAuthorizedError {
+        message
+      }
+    }
+  }
+`;
+
+const UPDATE_DIGITAL_CARD = `
+  mutation update_digital_card(
+    $id: Int!, 
+    $email: String, 
+    $job_title: String, 
+    $full_name: String, 
+    $phone_number: String, 
+    $website: String,
+    $slug: String,
+  ) {
+    update_digital_card(
+      id: $id, 
+      email: $email, 
+      job_title: $job_title, 
+      full_name: $full_name, 
+      phone_number: $phone_number, 
+      website: $website,
+      slug: $slug
+    ) {
+      ... on UpdateDigitalCardSuccess {
+        digital_card {
+          id
+          email
+          job_title
+          full_name
+          phone_number
+          website
+          user_id
+          slug
+          qr_code
+        }
+      }
+      ... on NotFoundError {
+        message
+      }
+      ... on NotAuthorizedError {
+        message
+      }
+    }
+  }
+`;
+
 export function usePublicResource(apiUrl: string) {
   const fetchResource = async () => {
     try {
@@ -158,7 +279,7 @@ export function usePublicResource(apiUrl: string) {
   };
 }
 
-export function usePrivateResource(apiUrl: string) {
+export function useImageResource(apiUrl: string) {
   const fetchResource = async () => {
     try {
       const session = await supabase.auth.getSession();
@@ -214,7 +335,7 @@ export function usePrivateResource(apiUrl: string) {
     try {
       const session = await supabase.auth.getSession();
       const tokens = session?.data?.session?.access_token;
-      console.log("deleting card");
+      // console.log("deleting card");
 
       const body = {
         query: DELETE_CARD,
@@ -262,6 +383,115 @@ export function usePrivateResource(apiUrl: string) {
   const { data, error, mutate } = useSWR("business_cards", fetchResource);
   return {
     resources: data as Card[] | undefined,
+    createResource,
+    deleteResource,
+    updateResource,
+    loading: !error && !data,
+  };
+}
+export function useDigitalCardResource(apiUrl: string) {
+  const fetchResource = async () => {
+    try {
+      const session = await supabase.auth.getSession();
+      const tokens = session?.data?.session?.access_token;
+
+      const body = {
+        query: GET_DIGITAL_CARDS,
+      };
+      const response = await fetch(apiUrl as RequestInfo, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokens}`,
+        },
+        body: JSON.stringify(body),
+      });
+
+      const responseJSON = await response.json();
+      return responseJSON.data.digital_cards as DigitalCard[];
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const createResource = async (card: DigitalCardRequest) => {
+    try {
+      const session = await supabase.auth.getSession();
+      const tokens = session?.data?.session?.access_token;
+
+      const body = {
+        query: CREATE_DIGITAL_CARD,
+        variables: card,
+      };
+
+      const response = await fetch(apiUrl as RequestInfo, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokens}`,
+        },
+        body: JSON.stringify(body),
+      });
+
+      const data = await response.json();
+      mutate();
+      return data?.data?.create_digital_card?.qr_code;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteResource = async (id: number) => {
+    try {
+      const session = await supabase.auth.getSession();
+      const tokens = session?.data?.session?.access_token;
+
+      const body = {
+        query: DELETE_DIGITAL_CARD,
+        variables: { id: id },
+      };
+
+      const response = await fetch(apiUrl as RequestInfo, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokens}`,
+        },
+        body: JSON.stringify(body),
+      });
+      mutate();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateResource = async (card: DigitalCard) => {
+    try {
+      const session = await supabase.auth.getSession();
+      const tokens = session?.data?.session?.access_token;
+
+      const body = {
+        query: UPDATE_DIGITAL_CARD,
+        variables: card,
+      };
+
+      const response = await fetch(apiUrl as RequestInfo, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokens}`,
+        },
+        body: JSON.stringify(body),
+      });
+      mutate();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const { data, error, mutate } = useSWR("digital_cards", fetchResource);
+  return {
+    resources: data as DigitalCard[] | undefined,
     createResource,
     deleteResource,
     updateResource,
