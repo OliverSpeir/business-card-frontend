@@ -190,12 +190,31 @@ const DigitalGallery = () => {
           <div key={card.id} className="">
             <div className="border rounded shadow-md bg-white">
               <div className="relative pb-6">
+                <h1 className="bg-slate-600 text-center">Slug: {card.slug}</h1>
+                  <h2>QR CODE:</h2>
                 <Image
                   src={card.qr_code}
-                  width={1000}
-                  height={600}
+                  width={500}
+                  height={300}
                   alt={`QR code of digital card ${idx + 1}`}
+                  className=""
                 />
+                <div className="bg-slate-600">
+                  <ul>
+                    <li>
+                      Full Name: {card.full_name}
+                    </li>
+                    <li>
+                      Job title: {card.job_title}
+                    </li>
+                    <li>
+                      Phone Number: {card.phone_number}
+                    </li>
+                    <li>
+                      Website: {card.website}
+                    </li>
+                  </ul>
+                </div>
               </div>
               <div className="flex justify-between p-2">
                 <button

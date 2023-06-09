@@ -86,38 +86,48 @@ const Form: React.FC<FormProps> = ({
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-slate-600 shadow-lg sm:rounded-3xl sm:p-20">
           <form onSubmit={handleSubmit} className="space-y-4">
+            Full Name
             <input
               type="text"
               name="full_name"
               placeholder="Full name"
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
             />
+            <div>
+            Job title
             <input
               type="text"
               name="job_title"
               placeholder="Job title"
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
-            />
+            /></div>
+            <div>
+            Email
             <input
               type="email"
               name="email"
               placeholder="Email"
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
-            />
+            /></div>
+            <div>
+            Phone Number
             <input
               type="text"
               name="phone_number"
               placeholder="Phone number"
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
-            />
+            /></div>
+            <div>
+            Website / LinkedIn
             <input
               type="text"
               name="website"
               placeholder="linkedin.com/in/example/"
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
-            />
+            /></div>
             {(formType === "digital" || formType === "digital-create") && (
               <div>
+                Slug (suffix of website)
                 <input
                   type="text"
                   name="slug"
