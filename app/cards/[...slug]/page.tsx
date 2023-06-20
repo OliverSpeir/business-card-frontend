@@ -146,8 +146,8 @@ function CardPage({ params }: CardPageProps) {
 
   return (
     <div className="flex justify-center items-center h-screen text-2xl overflow-hidden">
-      <div>
-        <h1 className="text-4xl font-bold text-center">{fullName}</h1>
+      <div className="overflow-hidden">
+        <h1 className="text-4xl font-bold text-center overflow-hidden">{fullName}</h1>
         {/* <Image
                   src={profilePic}
                   width={600}
@@ -155,26 +155,26 @@ function CardPage({ params }: CardPageProps) {
                   alt={`${fullName}'s Profile Picture`}
                   className=""
                 /> */}
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center overflow-hidden">
           <img src={profilePic} className="mx-5 max-w-xs" />
         </div>
-        <p className="mt-2 text-center">{jobTitle}</p>
-        <p className="mt-2 text-center">
+        <p className="mt-2 text-center overflow-hidden">{jobTitle}</p>
+        <p className="mt-2 text-center overflow-hidden">
           <a href={`mailto:${email}`} className="text-blue-500">
             {email}
           </a>
         </p>
-        <p className="mt-2 text-center">
+        <p className="mt-2 text-center overflow-hidden">
           <a href={website} className="text-blue-500">
             {website}
           </a>
         </p>
-        <p className="mt-2 text-center">
+        <p className="mt-2 text-center overflow-hidden">
           <a href={`tel:${phoneNumber}`} className="text-blue-500">
             {phoneNumber}
           </a>
         </p>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center overflow-hidden">
           <button
             onClick={() =>
               saveToContacts(
@@ -186,7 +186,7 @@ function CardPage({ params }: CardPageProps) {
                 profilePic
               )
             }
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded overflow-hidden"
           >
             Save to Contacts
           </button>
