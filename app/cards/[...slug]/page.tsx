@@ -145,7 +145,7 @@ function CardPage({ params }: CardPageProps) {
   const { fullName, jobTitle, email, website, phoneNumber, profilePic } = data;
 
   return (
-    <div className="flex justify-center items-center h-screen text-2xl">
+    <div className="flex justify-center items-center h-screen text-2xl overflow-hidden">
       <div>
         <h1 className="text-4xl font-bold text-center">{fullName}</h1>
         {/* <Image
