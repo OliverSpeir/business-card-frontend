@@ -23,7 +23,6 @@ export interface DigitalCardResource {
   loading: boolean;
 }
 
-
 export type Card = {
   id: number;
   email: string;
@@ -44,6 +43,7 @@ export type DigitalCard = {
   phone_number: string;
   website: string;
   user_id: string;
+  profile_pic: string;
   slug: string;
   qr_code: string;
 };
@@ -165,6 +165,7 @@ const GET_DIGITAL_CARDS = `
       phone_number
       website
       user_id
+      profile_pic
       slug
       qr_code
     }
@@ -178,6 +179,7 @@ const CREATE_DIGITAL_CARD = `
     $full_name: String!,
     $phone_number: String!,
     $website: String!,
+    $profile_pic: String!,
     $slug: String!,
   ) {
     create_digital_card(
@@ -186,6 +188,7 @@ const CREATE_DIGITAL_CARD = `
       full_name: $full_name, 
       phone_number: $phone_number, 
       website: $website, 
+      profilePic: $profile_pic,
       slug: $slug
     ) {
       qr_code
@@ -217,6 +220,7 @@ const UPDATE_DIGITAL_CARD = `
     $full_name: String, 
     $phone_number: String, 
     $website: String,
+    $profile_pic: String,
     $slug: String,
   ) {
     update_digital_card(
@@ -226,6 +230,7 @@ const UPDATE_DIGITAL_CARD = `
       full_name: $full_name, 
       phone_number: $phone_number, 
       website: $website,
+      profile_pic: $profile_pic,
       slug: $slug
     ) {
       ... on UpdateDigitalCardSuccess {
@@ -237,6 +242,7 @@ const UPDATE_DIGITAL_CARD = `
           phone_number
           website
           user_id
+          profile_pic
           slug
           qr_code
         }
@@ -469,6 +475,7 @@ export function useDigitalCardResource(apiUrl: string) {
     try {
       const session = await supabase.auth.getSession();
       const tokens = session?.data?.session?.access_token;
+      console.log(card)
 
       const body = {
         query: UPDATE_DIGITAL_CARD,

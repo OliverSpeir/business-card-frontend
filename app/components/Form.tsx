@@ -59,6 +59,7 @@ const Form: React.FC<FormProps> = ({
     } else {
       values = {
         email: (formData.get("email") as string) || initialValues?.email || "",
+        profile_pic: (formData.get("profile_pic") as string) || initialValues?.profile_pic || "",
         job_title:
           (formData.get("job_title") as string) ||
           initialValues?.job_title ||
@@ -94,56 +95,71 @@ const Form: React.FC<FormProps> = ({
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
             />
             <div>
-            Job title
-            <input
-              type="text"
-              name="job_title"
-              placeholder="Job title"
-              className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
-            /></div>
+              Job title
+              <input
+                type="text"
+                name="job_title"
+                placeholder="Job title"
+                className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
+              />
+            </div>
             <div>
-            Email
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
-            /></div>
+              Email
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
+              />
+            </div>
             <div>
-            Phone Number
-            <input
-              type="text"
-              name="phone_number"
-              placeholder="Phone number"
-              className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
-            /></div>
+              Phone Number
+              <input
+                type="text"
+                name="phone_number"
+                placeholder="Phone number"
+                className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
+              />
+            </div>
             <div>
-            Website / LinkedIn
-            <input
-              type="text"
-              name="website"
-              placeholder="linkedin.com/in/example/"
-              className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
-            /></div>
+              Website / LinkedIn
+              <input
+                type="text"
+                name="website"
+                placeholder="linkedin.com/in/example/"
+                className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
+              />
+            </div>
             {(formType === "digital" || formType === "digital-create") && (
-              <div>
-                Slug (suffix of website)
-                <input
-                  type="text"
-                  name="slug"
-                  placeholder="your-name"
-                  className={`block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none ${
-                    slugValidation && !slugValidation.unique
-                      ? "border-red-600"
-                      : ""
-                  }`}
-                />
-                {slugValidation && !slugValidation.unique && (
-                  <div className="text-red-600 text-xs mt-1">
-                    {slugValidation.message}
-                  </div>
-                )}
-              </div>
+              <>
+                <div>
+                  Profile Picture URL
+                  <input
+                    type="text"
+                    name="profile_pic"
+                    placeholder="Profile Picture URL"
+                    className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
+                  />
+                </div>
+                <div>
+                  Slug (suffix of website)
+                  <input
+                    type="text"
+                    name="slug"
+                    placeholder="your-name"
+                    className={`block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none ${
+                      slugValidation && !slugValidation.unique
+                        ? "border-red-600"
+                        : ""
+                    }`}
+                  />
+                  {slugValidation && !slugValidation.unique && (
+                    <div className="text-red-600 text-xs mt-1">
+                      {slugValidation.message}
+                    </div>
+                  )}
+                </div>
+              </>
             )}
             <div className="flex justify-between">
               <button

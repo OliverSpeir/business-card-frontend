@@ -7,6 +7,8 @@ import {
   DigitalCardRequest,
   CardRequest,
 } from "../components/useResource";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export default function DigitalPage() {
   const PrivateApiUrl = process.env.NEXT_PUBLIC_GRAPHQL_API_URL;
@@ -40,6 +42,8 @@ export default function DigitalPage() {
   };
 
   return (
+    <>
+    <Header/>
     <div className="p-4">
       <div className="bg-opacity-50 flex items-center justify-center z-10">
         <div>
@@ -54,5 +58,7 @@ export default function DigitalPage() {
         </div>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 }

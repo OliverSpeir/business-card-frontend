@@ -8,6 +8,8 @@ import {
   ImageResource,
 } from "../components/useResource";
 import Image from "next/image";
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default function ImagePage() {
   const PublicApiUrl = process.env.NEXT_PUBLIC_GRAPHQL_PUBLIC_API_URL;
@@ -35,6 +37,8 @@ export default function ImagePage() {
     return "";
   };
   return (
+    <>
+    <Header />
     <div className="p-4">
       <div className="flex flex-wrap">
         {publicResources?.map((imageUrl: string, idx: number) => {
@@ -82,5 +86,6 @@ export default function ImagePage() {
         </div>
       )}
     </div>
+  <Footer /></>
   );
 }

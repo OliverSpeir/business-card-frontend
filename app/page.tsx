@@ -1,8 +1,13 @@
 import Link from 'next/link'
 import { NextPage } from 'next'
+import Header from './components/Header';
+import Footer from './components/Footer';
+
 
 const HomePage: NextPage = () => {
   return (
+    <>
+    <Header/>
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <h1 className="text-4xl mb-10">Create a Card</h1>
       <div className="flex gap-4">
@@ -14,6 +19,8 @@ const HomePage: NextPage = () => {
         </Link>
       </div>
     </div>
+    <Footer/>
+    </>
   )
 }
 

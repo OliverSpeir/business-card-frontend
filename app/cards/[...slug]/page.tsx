@@ -1,5 +1,6 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 type CardPageProps = {
   params?: {
@@ -14,6 +15,7 @@ type DigitalCard = {
   email: string;
   website: string;
   phoneNumber: string;
+  profilePic: string;
 };
 
 type NotFoundError = {
@@ -32,11 +34,56 @@ function CardPage({ params }: CardPageProps) {
 
   const [data, setData] = useState<DigitalCardsResponse | null>(null);
 
+  const saveToContacts = async (
+    name: string,
+    jobTitle: string,
+    phone: string,
+    email: string,
+    website: string,
+    profilePic: string
+  ) => {
+    // Fetch the image from the provided URL
+    const response = await fetch(profilePic);
+    console.log(response);
+    const blob = await response.blob();
+
+    // Convert the image Blob to a Base64 string
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = function () {
+      const base64data = reader.result;
+
+      if (typeof base64data === "string") {
+        const vCardData = [
+          "BEGIN:VCARD",
+          "VERSION:3.0",
+          `N:;${name};;;`,
+          `FN:${name}`,
+          `TITLE:${jobTitle}`,
+          `TEL;TYPE=CELL:${phone}`,
+          `EMAIL:${email}`,
+          `URL:${website}`,
+          `PHOTO;ENCODING=b;TYPE=JPEG:${base64data.split(",")[1]}`,
+          "END:VCARD",
+        ].join("\n");
+
+        const url = URL.createObjectURL(
+          new Blob([vCardData], { type: "text/vcard" })
+        );
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${name}.vcf`;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+    };
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (!url_slug) {
-            throw new Error("URL Slug is missing");
+          throw new Error("URL Slug is missing");
         }
         const response = await fetch(apiUrl, {
           method: "POST",
@@ -52,6 +99,7 @@ function CardPage({ params }: CardPageProps) {
                         email
                         website
                         phoneNumber
+                        profilePic
                     }
                     ... on NotFoundError {
                         message
@@ -68,10 +116,19 @@ function CardPage({ params }: CardPageProps) {
         }
 
         const json = await response.json();
-        console.log(json)
+        console.log(json);
         setData(json.data.digitalCards);
-      } catch (error) {
-      }
+        const { fullName, email, jobTitle, website, phoneNumber, profilePic } =
+          json.data.digitalCards;
+        saveToContacts(
+          fullName,
+          jobTitle,
+          phoneNumber,
+          email,
+          website,
+          profilePic
+        );
+      } catch (error) {}
     };
 
     fetchData();
@@ -81,61 +138,60 @@ function CardPage({ params }: CardPageProps) {
     return <div>Loading...</div>;
   }
 
-  if ('message' in data) {
+  if ("message" in data) {
     return <h1>Card not found</h1>;
   }
 
-  const { fullName, jobTitle, email, website, phoneNumber } = data;
-
-  const saveToContacts = (name: string, phone: string, email: string, website: string) => {
-    const vCardData = [
-      "BEGIN:VCARD",
-      "VERSION:3.0",
-      `N:;${name};;;`,
-      `FN:${name}`,
-      `TEL;TYPE=CELL:${phone}`,
-      `EMAIL:${email}`,
-      `URL:${website}`,
-      "END:VCARD",
-    ].join("\n");
-
-    const url = URL.createObjectURL(
-      new Blob([vCardData], { type: "text/vcard" })
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${name}.vcf`;
-    link.click();
-    URL.revokeObjectURL(url);
-};
+  const { fullName, jobTitle, email, website, phoneNumber, profilePic } = data;
 
   return (
-    <div className="flex justify-center items-center h-screen">
-        <div>
-          <h1 className="text-xl font-bold text-center">{fullName}</h1>
-          <p className="mt-2 text-center">{jobTitle}</p>
-          <p className="mt-2 text-center">
-            <a href={`mailto:${email}`} className="text-blue-500">
-              {email}
-            </a>
-          </p>
-          <p className="mt-2 text-center">
-            <a href={website} className="text-blue-500">
-              {website}
-            </a>
-          </p>
-          <p className="mt-2 text-center">
-            <a href={`tel:${phoneNumber}`} className="text-blue-500">
-              {phoneNumber}
-            </a>
-          </p>
+    <div className="flex justify-center items-center h-screen text-2xl">
+      <div>
+        <h1 className="text-4xl font-bold text-center">{fullName}</h1>
+        {/* <Image
+                  src={profilePic}
+                  width={600}
+                  height={600}
+                  alt={`${fullName}'s Profile Picture`}
+                  className=""
+                /> */}
+        <div className="flex justify-center items-center">
+          <img src={profilePic} className="mx-5 max-w-xs" />
+        </div>
+        <p className="mt-2 text-center">{jobTitle}</p>
+        <p className="mt-2 text-center">
+          <a href={`mailto:${email}`} className="text-blue-500">
+            {email}
+          </a>
+        </p>
+        <p className="mt-2 text-center">
+          <a href={website} className="text-blue-500">
+            {website}
+          </a>
+        </p>
+        <p className="mt-2 text-center">
+          <a href={`tel:${phoneNumber}`} className="text-blue-500">
+            {phoneNumber}
+          </a>
+        </p>
+        <div className="flex justify-center items-center">
           <button
-            onClick={() => saveToContacts(fullName, phoneNumber, email, website)}
+            onClick={() =>
+              saveToContacts(
+                fullName,
+                jobTitle,
+                phoneNumber,
+                email,
+                website,
+                profilePic
+              )
+            }
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
           >
             Save to Contacts
           </button>
         </div>
+      </div>
     </div>
   );
 }
