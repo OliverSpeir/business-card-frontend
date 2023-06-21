@@ -1,27 +1,89 @@
-import Link from 'next/link'
-import { NextPage } from 'next'
-import Header from './components/Header';
-import Footer from './components/Footer';
-
+"use client";
+import Link from "next/link";
+import { NextPage } from "next";
+import React, { useState } from "react";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import AuthButtons from "./components/AuthButtons";
+import Image from "next/image";
 
 const HomePage: NextPage = () => {
+  const [signedIn, setSignedIn] = useState<boolean>(false);
   return (
     <>
-    <Header/>
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1 className="text-4xl mb-10">Create a Card</h1>
-      <div className="flex gap-4">
-        <Link href="/digital" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Create Digital Card
-        </Link>
-        <Link href="/images" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Create Card Image
-        </Link>
+      <Header setSignedIn={setSignedIn} signedIn={signedIn} />
+      <div className="hero min-h-84 bg-base-200">
+        <div className="hero-content text-center lg:flex-row">
+          <div className="sm:max-w-md lg:max-w-max lg:flex">
+            {/* <h1 className="text-5xl font-bold">Create a Card</h1> */}
+            <div className="card card-compact w-96 bg-base-100 shadow-xl my-5 lg:mx-5">
+              <figure>
+              <Image
+                  src="/picture-card.webp"
+                  width={500}
+                  height={300}
+                  alt="picture card default image"
+                  className=""
+                />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title text-2xl">Picture Card</h2>
+                <p className="text-xl">Want to get picture of a business card from a template?</p>
+                <div className="card-actions justify-end">
+                  {signedIn && (
+                    <Link href="/images" className="btn btn-primary text-xl">
+                      Create Card Image
+                    </Link>
+                  )}
+                  {!signedIn && (
+                    <AuthButtons
+                      setSignedIn={setSignedIn}
+                      signedIn={signedIn}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="card card-compact w-96 bg-base-100 shadow-xl my-5 lg:mx-5">
+              <figure>
+              <Image
+                  src="/digital-card.webp"
+                  width={225}
+                  height={300}
+                  alt="digital card default image"
+                  className="rounded-lg"
+                />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title text-2xl">Digital Card</h2>
+                <p className="text-xl">
+                  Want to be able to show someone a QR Code that automatically
+                  saves your contact information?
+                </p>
+                <div className="card-actions justify-end">
+                  {signedIn && (
+                    <Link
+                      href="/digital"
+                      className="btn btn-primary text-xl"
+                    >
+                      Create Digital Card
+                    </Link>
+                  )}
+                  {!signedIn && (
+                    <AuthButtons
+                      setSignedIn={setSignedIn}
+                      signedIn={signedIn}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <Footer/>
+      <Footer />
     </>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

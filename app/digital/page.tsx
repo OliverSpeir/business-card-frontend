@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState} from "react";
 import Form from "../components/Form";
 import {
   useDigitalCardResource,
@@ -15,6 +15,7 @@ export default function DigitalPage() {
   if (!PrivateApiUrl) {
     throw new Error("NEXT_PUBLIC_GRAPHQL_API_URL is not defined");
   }
+  const [signedIn, setSignedIn] = useState<boolean>(false);
   const [slugValidation, setSlugValidation] = React.useState<{
     unique: boolean;
     message: string;
@@ -43,7 +44,7 @@ export default function DigitalPage() {
 
   return (
     <>
-    <Header/>
+    <Header setSignedIn={setSignedIn} signedIn={signedIn}/>
     <div className="p-4">
       <div className="bg-opacity-50 flex items-center justify-center z-10">
         <div>

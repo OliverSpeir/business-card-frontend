@@ -2,8 +2,12 @@
 import React, { useState, useEffect } from "react";
 import {supabase} from './supabaseClient';
 
-const AuthButtons: React.FC = () => {
-  const [signedIn, setSignedIn] = useState<boolean>(false);
+type AuthButtonsProps = {
+  setSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  signedIn: boolean;
+};
+
+const AuthButtons: React.FC<AuthButtonsProps> = ({setSignedIn, signedIn}) => {
 
   useEffect(() => {
     const checkSession = async () => {
@@ -41,14 +45,14 @@ const AuthButtons: React.FC = () => {
       {!signedIn ? (
         <button
           onClick={signInWithGoogle}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="btn btn-primary"
         >
-          Sign in with Google
+          Sign in to get Started
         </button>
       ) : (
         <button
           onClick={signOut}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          className="btn btn-error"
         >
           Sign Out
         </button>

@@ -23,7 +23,7 @@ export default function ImagePage() {
 
   const { publicResources }: PublicResource = usePublicResource(PublicApiUrl);
   const { createResource }: ImageResource = useImageResource(PrivateApiUrl);
-
+  const [signedIn, setSignedIn] = useState<boolean>(false);
   const [createFormVisible, setCreateFormVisible] = useState(false);
   const [selectedCard, setSelectedCard] = useState("");
   const handleCancel = () => {
@@ -38,7 +38,7 @@ export default function ImagePage() {
   };
   return (
     <>
-    <Header />
+    <Header setSignedIn={setSignedIn} signedIn={signedIn}/>
     <div className="p-4">
       <div className="flex flex-wrap">
         {publicResources?.map((imageUrl: string, idx: number) => {
