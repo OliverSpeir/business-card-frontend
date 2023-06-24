@@ -20,3 +20,11 @@
 
 - [Supabase JS Library](https://supabase.com/docs/reference/javascript/initializing)
 - [Backend Repo](https://github.com/OliverSpeir/business-card-fastapi)
+
+### TODO 
+
+- Use apollo client for requests 
+- Refactor dyanmic route page
+- Make form mobile friendly
+- have digital gallery link to card page
+- have slug randomize if not entered
