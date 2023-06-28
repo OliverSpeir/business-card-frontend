@@ -17,8 +17,10 @@ module.exports = {
   },
   daisyui: {
     themes: [
+      "light",
       {
-        mytheme: {
+        dark: {
+          ...require("daisyui/src/theming/themes")["[data-theme=dark]"],
           "primary": "#13a52c",
           "secondary": "#80edb1",
           "accent": "#916fd6",
@@ -26,7 +28,7 @@ module.exports = {
           "base-100": "#373a3e",
           "info": "#8bace9",
           "success": "#7aebd1",
-          "warning": "#f7cd36",         
+          "warning": "#f7cd36",
           "error": "#fc697a",
         },
       },
