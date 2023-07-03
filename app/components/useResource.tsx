@@ -475,7 +475,7 @@ export function useDigitalCardResource(apiUrl: string) {
     try {
       const session = await supabase.auth.getSession();
       const tokens = session?.data?.session?.access_token;
-      console.log(card)
+      // console.log(card)
 
       const body = {
         query: UPDATE_DIGITAL_CARD,
