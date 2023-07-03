@@ -9,10 +9,17 @@ module.exports = {
     extend: {
       spacing: {
         30: "7.5rem",
+        18: "4.5rem",
+        26: "6.5rem"
       },
       minHeight: {
         84: "83.5vh",
+        78: "78vh",
+        32: "50vw"
       },
+      minWidth: {
+        32: "32rem"
+      }
     },
   },
   daisyui: {

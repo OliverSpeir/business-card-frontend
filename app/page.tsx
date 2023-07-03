@@ -15,8 +15,8 @@ const HomePage: NextPage = () => {
       <div className="hero min-h-84 bg-base-200">
         <div className="hero-content text-center lg:flex-row">
           <div className="sm:max-w-md lg:max-w-max lg:flex">
-            {/* <h1 className="text-5xl font-bold">Create a Card</h1> */}
-            <div className="card card-compact w-96 bg-base-100 shadow-xl my-5 lg:mx-5">
+            {/* CARD 1 */}
+            <div className="card card-compact max-w-md bg-base-100 shadow-xl my-5 lg:mx-5">
               <figure>
               <Image
                   src="/picture-card.webp"
@@ -28,7 +28,7 @@ const HomePage: NextPage = () => {
               </figure>
               <div className="card-body">
                 <h2 className="card-title text-2xl">Picture Card</h2>
-                <p className="text-xl">Want to get picture of a business card from a template?</p>
+                <p className="text-xl">Create a business card from a template</p>
                 <div className="card-actions justify-end">
                   {signedIn && (
                     <Link href="/images" className="btn btn-primary text-xl">
@@ -44,21 +44,20 @@ const HomePage: NextPage = () => {
                 </div>
               </div>
             </div>
-            <div className="card card-compact w-96 bg-base-100 shadow-xl my-5 lg:mx-5">
-              <figure>
+            {/* CARD 2 */}
+            <div className="card card-compact max-w-lg bg-base-100 shadow-xl my-5 lg:mx-5">
+              <figure className="mb-4">
               <Image
                   src="/digital-card.webp"
                   width={225}
                   height={300}
                   alt="digital card default image"
-                  className="rounded-lg"
+                  className="rounded-lg mt-4"
                 />
               </figure>
               <div className="card-body">
                 <h2 className="card-title text-2xl">Digital Card</h2>
-                <p className="text-xl">
-                  Want to be able to show someone a QR Code that automatically
-                  saves your contact information?
+                <p className="text-xl mx-6">Create a business card from a template
                 </p>
                 <div className="card-actions justify-end">
                   {signedIn && (
@@ -78,6 +77,7 @@ const HomePage: NextPage = () => {
                 </div>
               </div>
             </div>
+            
           </div>
         </div>
       </div>

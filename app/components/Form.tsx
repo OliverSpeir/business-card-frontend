@@ -83,15 +83,15 @@ const Form: React.FC<FormProps> = ({
 
   return (
     <div className="py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-slate-600 shadow-lg sm:rounded-3xl sm:p-20">
+      <div className="relative py-3 max-w-xl  mx-auto lg:min-w-32">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -rotate-6 rounded-3xl"></div>
+        <div className="relative px-4 py-10 bg-slate-600 shadow-lg rounded-3xl p-20">
           <form onSubmit={handleSubmit} className="space-y-4">
             Full Name
             <input
               type="text"
               name="full_name"
-              placeholder="Full name"
+              placeholder=""
               className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
             />
             <div>
@@ -99,7 +99,7 @@ const Form: React.FC<FormProps> = ({
               <input
                 type="text"
                 name="job_title"
-                placeholder="Job title"
+                placeholder=""
                 className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
               />
             </div>
@@ -108,7 +108,7 @@ const Form: React.FC<FormProps> = ({
               <input
                 type="email"
                 name="email"
-                placeholder="Email"
+                placeholder=""
                 className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
               />
             </div>
@@ -117,7 +117,7 @@ const Form: React.FC<FormProps> = ({
               <input
                 type="text"
                 name="phone_number"
-                placeholder="Phone number"
+                placeholder=""
                 className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
               />
             </div>
@@ -137,7 +137,7 @@ const Form: React.FC<FormProps> = ({
                   <input
                     type="text"
                     name="profile_pic"
-                    placeholder="Profile Picture URL"
+                    placeholder="copy linkedin profile url"
                     className="block text-slate-600 text-sm py-3 px-4 rounded-md w-full border outline-none"
                   />
                 </div>
@@ -161,7 +161,7 @@ const Form: React.FC<FormProps> = ({
                 </div>
               </>
             )}
-            <div className="flex justify-between">
+            <div className="flex justify-evenly">
               <button
                 type="submit"
                 className="bg-gradient-to-r from-teal-200 to-teal-400 text-gray-800 font-semibold py-3 px-6 rounded-md"
