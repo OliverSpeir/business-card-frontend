@@ -40,21 +40,22 @@ export default function ImagePage() {
     <>
     <Header setSignedIn={setSignedIn} signedIn={signedIn}/>
     <div className="p-4">
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap justify-evenly">
         {publicResources?.map((imageUrl: string, idx: number) => {
           const baseCard = getBaseCardFromImageUrl(imageUrl);
           return (
             <div key={idx} className="">
-              <div className="border rounded shadow-md bg-white">
-                <div className="relative pb-6">
+              <div className="card mx-6 min-h-78">
+                <figure>
                   <Image
                     src={imageUrl}
-                    width={1000}
+                    width={500}
                     height={600}
                     alt={`picture ${idx + 1}`}
                   />
+                  </figure>
                   <button
-                    className="text-white bg-blue-500 rounded p-2"
+                    className="text-white bg-blue-500 rounded-b-2xl p-2"
                     onClick={() => {
                       setCreateFormVisible(true);
                       setSelectedCard(baseCard);
@@ -64,7 +65,6 @@ export default function ImagePage() {
                   </button>
                 </div>
               </div>
-            </div>
           );
         })}
       </div>

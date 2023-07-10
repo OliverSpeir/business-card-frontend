@@ -12,6 +12,7 @@ import {
 } from "./useResource";
 import Form from "./Form";
 import Image from "next/image";
+import Link from "next/link";
 
 const apiCheck = () => {
   const ApiUrl = process.env.NEXT_PUBLIC_GRAPHQL_API_URL;
@@ -26,36 +27,41 @@ const ImageGallery = () => {
   const { resources, deleteResource, updateResource, loading }: ImageResource =
     useImageResource(ApiUrl);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center">
+        <span className=" min-h-84 w-2/4 loading loading-spinner text-primary"></span>
+      </div>
+    );
 
   return (
-    <div className="p-4">
-      <div className="flex flex-wrap">
+    <>
+      <div className="flex flex-wrap justify-evenly">
         {resources?.map((card, idx) => (
-          <div key={card.id} className="">
-            <div className="border rounded shadow-md bg-white">
-              <div className="relative pb-6">
-                <Image
-                  src={card.image_url}
-                  width={1000}
-                  height={600}
-                  alt={`picture of business card ${idx + 1}`}
-                />
-              </div>
-              <div className="flex justify-between p-2">
-                <button
-                  className="text-white bg-red-500 rounded p-2 mr-2"
-                  onClick={() => deleteResource(card.id)}
-                >
-                  Delete
-                </button>
-                <button
-                  className="text-white bg-blue-500 rounded p-2"
-                  onClick={() => setSelectedCard(card)}
-                >
-                  Update
-                </button>
-              </div>
+          <div
+            key={card.id}
+            className="md:max-w-md xl:max-w-lg relative group my-6 min-h-78 hero"
+          >
+            <Image
+              src={card.image_url}
+              width={1000}
+              height={600}
+              alt={`picture of business card ${idx + 1}`}
+              className="rounded-lg"
+            />
+            <div className="flex justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button
+                className="btn btn-error mx-2 mt-56"
+                onClick={() => deleteResource(card.id)}
+              >
+                Delete
+              </button>
+              <button
+                className="btn btn-primary mx-2 mt-56"
+                onClick={() => setSelectedCard(card)}
+              >
+                Update
+              </button>
             </div>
           </div>
         ))}
@@ -89,7 +95,7 @@ const ImageGallery = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
@@ -103,54 +109,48 @@ const DigitalGallery = () => {
   }: DigitalCardResource = useDigitalCardResource(ApiUrl);
   const [selectedCard, setSelectedCard] = useState<DigitalCard | null>(null);
   if (loading) return <div>Loading...</div>;
-  console.log(resources)
+  console.log(resources);
   return (
-    <div className="p-4">
-      <div className="flex flex-wrap">
+    <div className="p-4 min-h-78 hero">
+      <div className="flex flex-wrap justify-evenly hero">
         {resources?.map((card, idx) => (
           <div key={card.id} className="">
-            <div className="border rounded shadow-md bg-white">
-              <div className="relative pb-6">
-                <h1 className="bg-slate-600 text-center">Slug: {card.slug}</h1>
-                  <h2>QR CODE:</h2>
+            <div className="relative pb-6 card bg-base-200 max-w-sm min-w-fit">
+              <figure>
                 <Image
                   src={card.qr_code}
-                  width={500}
+                  width={225}
                   height={300}
                   alt={`QR code of digital card ${idx + 1}`}
-                  className=""
+                  className="rounded-lg"
                 />
-                <div className="bg-slate-600">
-                  <ul>
-                    <li>
-                      Full Name: {card.full_name}
-                    </li>
-                    <li>
-                      Job title: {card.job_title}
-                    </li>
-                    <li>
-                      Phone Number: {card.phone_number}
-                    </li>
-                    <li>
-                      Website: {card.website}
-                    </li>
-                  </ul>
+              </figure>
+              <div className="card-body max-w-sm">
+                <ul>
+                  <li className="">Full Name: {card.full_name}</li>
+                  <li className="">Job title: {card.job_title}</li>
+                  <li className="">Phone Number: {card.phone_number}</li>
+                  <li className="break-words">Website: {card.website}</li>
+                  <Link href={`/cards/${card.slug}`} className="link link-info">
+                    {" "}
+                    Slug: {card.slug}
+                  </Link>
+                </ul>
+              </div>
+              <div className="flex justify-between mx-4 card-actions">
+                  <button
+                    className="btn btn-error"
+                    onClick={() => deleteResource(card.id)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => setSelectedCard(card)}
+                  >
+                    Update
+                  </button>
                 </div>
-              </div>
-              <div className="flex justify-between p-2">
-                <button
-                  className="text-white bg-red-500 rounded p-2 mr-2"
-                  onClick={() => deleteResource(card.id)}
-                >
-                  Delete
-                </button>
-                <button
-                  className="text-white bg-blue-500 rounded p-2"
-                  onClick={() => setSelectedCard(card)}
-                >
-                  Update
-                </button>
-              </div>
             </div>
           </div>
         ))}
