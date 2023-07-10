@@ -2,12 +2,8 @@ import React from "react";
 import AuthButtons from "./AuthButtons";
 import Link from "next/link";
 
-type HeaderProps = {
-  setSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  signedIn: boolean;
-};
 
-export default function Header ({setSignedIn, signedIn}: HeaderProps) {
+export default function Header () {
   return (
     <>
       <div className="navbar bg-base-100">
@@ -54,7 +50,7 @@ export default function Header ({setSignedIn, signedIn}: HeaderProps) {
           </ul>
         </div>
         <div className="navbar-end">
-          <AuthButtons setSignedIn={setSignedIn} signedIn={signedIn} />
+          <AuthButtons />
         </div>
       </div>
     </>

@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient";
+import { useEffect, useState } from "react";
 
 export type Card = {
   id: number;
@@ -260,7 +261,7 @@ export async function fetchPublicResource() {
 
 export async function fetchImageResource() {
   try {
-    console.log("fetching images")
+    // console.log("fetching images")
     const apiUrl = process.env.NEXT_PUBLIC_GRAPHQL_API_URL;
     if (!apiUrl) {
       throw new Error("NEXT_PUBLIC_GRAPHQL_API_URL is not defined");
@@ -279,7 +280,7 @@ export async function fetchImageResource() {
       },
       body: JSON.stringify(body),
     });
-    console.log("images fetched")
+    // console.log("images fetched")
     const responseJSON = await response.json();
     return responseJSON.data.business_cards as Card[];
   } catch (err) {
@@ -471,4 +472,29 @@ export async function updateDigitalResource(card: DigitalCard) {
   } catch (err) {
     console.error(err);
   }
+}
+
+
+export function useAuth() {
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      setIsSignedIn(data !== null);
+    };
+    checkSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        setIsSignedIn(session !== null);
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  return isSignedIn;
 }

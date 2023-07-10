@@ -1,34 +1,10 @@
 "use client"
-import React, { useState, useEffect } from "react";
-import {supabase} from './supabaseClient';
+import React from "react";
+import { supabase } from "./supabaseClient";
+import { useAuth } from "./functions";
 
-type AuthButtonsProps = {
-  setSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  signedIn: boolean;
-};
-
-const AuthButtons: React.FC<AuthButtonsProps> = ({setSignedIn, signedIn}) => {
-
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      // console.log(data);
-      setSignedIn(data !== null);
-    };
-    checkSession();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        // console.log(await supabase.auth.getSession())
-        // console.log(await supabase.auth.getUser())
-        setSignedIn(session !== null);
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
+const AuthButtons: React.FC = () => {
+  const signedIn = useAuth();
 
   async function signInWithGoogle() {
     const { data, error } = await supabase.auth.signInWithOAuth({

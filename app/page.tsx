@@ -1,17 +1,18 @@
 "use client";
 import Link from "next/link";
 import { NextPage } from "next";
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import AuthButtons from "./components/AuthButtons";
 import Image from "next/image";
+import { useAuth } from "./components/functions";
 
 const HomePage: NextPage = () => {
-  const [signedIn, setSignedIn] = useState<boolean>(false);
+  const signedIn = useAuth()
   return (
     <>
-      <Header setSignedIn={setSignedIn} signedIn={signedIn} />
+      <Header/>
       <div className="hero min-h-84 bg-base-200">
         <div className="hero-content text-center lg:flex-row">
           <div className="sm:max-w-md lg:max-w-max lg:flex">
@@ -37,8 +38,6 @@ const HomePage: NextPage = () => {
                   )}
                   {!signedIn && (
                     <AuthButtons
-                      setSignedIn={setSignedIn}
-                      signedIn={signedIn}
                     />
                   )}
                 </div>
@@ -71,8 +70,6 @@ const HomePage: NextPage = () => {
                   )}
                   {!signedIn && (
                     <AuthButtons
-                      setSignedIn={setSignedIn}
-                      signedIn={signedIn}
                     />
                   )}
                 </div>
