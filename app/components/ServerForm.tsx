@@ -6,7 +6,6 @@ import {
   DigitalCard,
   DigitalCardRequest,
 } from "./useResource";
-import { useRouter } from 'next/navigation'
 
 type RequestType = CardRequest | DigitalCardRequest;
 type FormProps = {
@@ -23,7 +22,7 @@ const isCard = (object: any): object is Card => {
   return "base_card" in object;
 };
 
-const Form: React.FC<FormProps> = ({
+const ServerForm: React.FC<FormProps> = ({
   formType,
   initialValues,
   onSubmit,
@@ -81,6 +80,7 @@ const Form: React.FC<FormProps> = ({
 
     onSubmit(values);
   };
+
   return (
     <div className="py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 max-w-xl  mx-auto lg:min-w-32">
@@ -185,4 +185,4 @@ const Form: React.FC<FormProps> = ({
   );
 };
 
-export default Form;
+export default ServerForm;

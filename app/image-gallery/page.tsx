@@ -7,6 +7,7 @@ import React, { useState} from "react";
 import {
   fetchImageResource,
 } from "../components/functions";
+import { useRouter } from 'next/navigation'
 
 type Props = {
   searchParams: Record<string, string> | null | undefined;

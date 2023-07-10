@@ -1,9 +1,11 @@
 import React from "react";
 import AuthButtons from "./AuthButtons";
 import Link from "next/link";
+import { useAuth } from "./functions";
 
 
 export default function Header () {
+  const signedIn = useAuth()
   return (
     <>
       <div className="navbar bg-base-100">
