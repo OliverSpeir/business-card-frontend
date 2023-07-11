@@ -154,15 +154,14 @@ function CardPage({ params }: CardPageProps) {
         <h1 className="text-4xl font-bold text-center overflow-hidden">
           {fullName}
         </h1>
-        {/* <Image
-                  src={profilePic}
-                  width={600}
-                  height={600}
-                  alt={`${fullName}'s Profile Picture`}
-                  className=""
-                /> */}
         <div className="flex justify-center items-center overflow-hidden">
-          <img src={profilePic} className="mx-5 max-w-xs" />
+          <Image
+            src={profilePic}
+            width={600}
+            height={600}
+            alt={`${fullName}'s Profile Picture`}
+            className="mx-5 max-w-xs"
+          />
         </div>
         <p className="mt-2 text-center overflow-hidden">{jobTitle}</p>
         <p className="mt-2 text-center overflow-hidden">
