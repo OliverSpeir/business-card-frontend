@@ -116,7 +116,7 @@ function CardPage({ params }: CardPageProps) {
         }
 
         const json = await response.json();
-        console.log(json);
+        // console.log(json);
         setData(json.data.digitalCards);
         const { fullName, email, jobTitle, website, phoneNumber, profilePic } =
           json.data.digitalCards;
@@ -135,7 +135,11 @@ function CardPage({ params }: CardPageProps) {
   }, [apiUrl, url_slug]);
 
   if (!data) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center">
+        <span className=" min-h-84 w-2/4 loading loading-spinner text-primary"></span>
+      </div>
+    );
   }
 
   if ("message" in data) {
@@ -147,7 +151,9 @@ function CardPage({ params }: CardPageProps) {
   return (
     <div className="flex justify-center items-center h-screen text-2xl overflow-hidden">
       <div className="overflow-hidden">
-        <h1 className="text-4xl font-bold text-center overflow-hidden">{fullName}</h1>
+        <h1 className="text-4xl font-bold text-center overflow-hidden">
+          {fullName}
+        </h1>
         {/* <Image
                   src={profilePic}
                   width={600}

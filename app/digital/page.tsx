@@ -48,9 +48,7 @@ export default function DigitalPage() {
     <div className="lg:-mt-16">
       <div className="bg-opacity-50 flex items-center justify-center z-10">
         <div>
-          <h2 className="relative top-18 left-12 md:top-26 md:left-28 lg:text-2xl font-bold z-10">
-            Create New Digital Card
-          </h2>
+          <h2 className="text-center font-bold relative top-18 md:top-24 z-10 "> Create New Digital Card</h2>
           <Form
             formType="digital-create"
             onSubmit={handleCreate}

@@ -38,32 +38,31 @@ const ImageGallery = () => {
     <>
       <div className="flex flex-wrap justify-evenly">
         {resources?.map((card, idx) => (
-          <div
-            key={card.id}
-            className="md:max-w-md xl:max-w-lg relative group my-6 min-h-78 hero"
-          >
-            <Image
-              src={card.image_url}
-              width={1000}
-              height={600}
-              alt={`picture of business card ${idx + 1}`}
-              className="rounded-lg"
-            />
-            <div className="flex justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <button
-                className="btn btn-error mx-2 mt-56"
-                onClick={() => deleteResource(card.id)}
-              >
-                Delete
-              </button>
-              <button
-                className="btn btn-primary mx-2 mt-56"
-                onClick={() => setSelectedCard(card)}
-              >
-                Update
-              </button>
+          <>
+            <div key={card.id} className="md:max-w-md xl:max-w-lg my-6">
+              <Image
+                src={card.image_url}
+                width={1000}
+                height={600}
+                alt={`picture of business card ${idx + 1}`}
+                className="rounded-lg"
+              />
+              <div className="flex justify-between bg-base-100 rounded-lg">
+                <button
+                  className="btn btn-error mx-2"
+                  onClick={() => deleteResource(card.id)}
+                >
+                  Delete
+                </button>
+                <button
+                  className="btn btn-primary mx-2"
+                  onClick={() => setSelectedCard(card)}
+                >
+                  Update
+                </button>
+              </div>
             </div>
-          </div>
+          </>
         ))}
       </div>
       {selectedCard && (
@@ -108,14 +107,18 @@ const DigitalGallery = () => {
     loading,
   }: DigitalCardResource = useDigitalCardResource(ApiUrl);
   const [selectedCard, setSelectedCard] = useState<DigitalCard | null>(null);
-  if (loading) return <div>Loading...</div>;
-  console.log(resources);
+  if (loading)
+  return (
+    <div className="flex justify-center">
+      <span className=" min-h-84 w-2/4 loading loading-spinner text-primary"></span>
+    </div>
+  );
   return (
     <div className="p-4 min-h-78 hero">
       <div className="flex flex-wrap justify-evenly hero">
         {resources?.map((card, idx) => (
           <div key={card.id} className="">
-            <div className="relative pb-6 card bg-base-200 max-w-sm min-w-fit">
+            <div className="relative pb-6 card bg-base-200 max-w-sm">
               <figure>
                 <Image
                   src={card.qr_code}
@@ -125,32 +128,54 @@ const DigitalGallery = () => {
                   className="rounded-lg"
                 />
               </figure>
-              <div className="card-body max-w-sm">
-                <ul>
-                  <li className="">Full Name: {card.full_name}</li>
-                  <li className="">Job title: {card.job_title}</li>
-                  <li className="">Phone Number: {card.phone_number}</li>
-                  <li className="break-words">Website: {card.website}</li>
-                  <Link href={`/cards/${card.slug}`} className="link link-info">
-                    {" "}
-                    Slug: {card.slug}
-                  </Link>
-                </ul>
+              <div className="card-body max-w-xs sm:max-w-full">
+                <div className="overflow-x-auto">
+                  <table className="table">
+                 
+                    <tbody className="">
+                   
+                      <tr className="bg-base-200">
+                        <th>Full Name</th>
+                        <td>{card.full_name}</td>
+                      </tr>
+                    
+                      <tr>
+                        <th>Job title</th>
+                        <td>{card.job_title}</td>
+                      </tr>
+                   
+                      <tr>
+                        <th>Phone Number</th>
+                        <td>{card.phone_number}</td>
+                      </tr>
+                  
+                      <tr>
+                        <th>Website</th>
+                        <td>{card.website}</td>
+                      </tr>
+              
+                      <tr>
+                        <th>Slug</th>
+                        <td><Link href={`/cards/${card.slug}`} className="link link-info">{card.slug}</Link></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
               <div className="flex justify-between mx-4 card-actions">
-                  <button
-                    className="btn btn-error"
-                    onClick={() => deleteResource(card.id)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => setSelectedCard(card)}
-                  >
-                    Update
-                  </button>
-                </div>
+                <button
+                  className="btn btn-error"
+                  onClick={() => deleteResource(card.id)}
+                >
+                  Delete
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setSelectedCard(card)}
+                >
+                  Update
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -158,7 +183,7 @@ const DigitalGallery = () => {
       {selectedCard && (
         <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-10">
           <div>
-            <h2 className="relative top-32 left-30 text-2xl font-bold mb-2 z-10">
+            <h2 className="relative top-20 text-center text-2xl font-bold mb-2 z-10">
               Update Card
             </h2>
             <Form

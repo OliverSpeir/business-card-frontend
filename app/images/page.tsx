@@ -45,7 +45,7 @@ export default function ImagePage() {
           const baseCard = getBaseCardFromImageUrl(imageUrl);
           return (
             <div key={idx} className="">
-              <div className="card mx-6 min-h-78">
+              <div className="card m-6">
                 <figure>
                   <Image
                     src={imageUrl}
